@@ -858,7 +858,7 @@ void write_cell_data (xlsxiowriter handle, const char* rowattr, const char* pref
     if (data)
       fprintf(handle->pipe_write, "%s", data);
     if (suffix)
-      fprintf(handle->pipe_write, suffix);
+      fprintf(handle->pipe_write, "%s", suffix);
   } else {
     //add cell data to buffer
     if (prefix)
