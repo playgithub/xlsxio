@@ -1240,6 +1240,17 @@ struct xlsxio_read_sheet_struct {
   size_t paddingcol;
 };
 
+DLL_EXPORT_XLSXIO int xlsxioread_sheet_last_column_index(xlsxioreadersheet sheethandle)
+{
+    return (int)sheethandle->lastcolnr;
+}
+
+
+DLL_EXPORT_XLSXIO unsigned int xlsxioread_sheet_flags(xlsxioreadersheet sheethandle)
+{
+    return (int)sheethandle->processcallbackdata.flags;
+}
+
 DLL_EXPORT_XLSXIO int xlsxioread_process (xlsxioreader handle, const XLSXIOCHAR* sheetname, unsigned int flags, xlsxioread_process_cell_callback_fn cell_callback, xlsxioread_process_row_callback_fn row_callback, void* callbackdata)
 {
   int result = 0;
