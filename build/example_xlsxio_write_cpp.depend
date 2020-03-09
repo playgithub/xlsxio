@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1458508677 source:z:\xlsxio\examples\example_xlsxio_write_cpp.cpp
+	<stdlib.h>
+	<stdio.h>
+	"xlsxio_write.h"
+
+1458418704 z:\xlsxio\include\xlsxio_write.h
+	<stdlib.h>
+	<time.h>
+

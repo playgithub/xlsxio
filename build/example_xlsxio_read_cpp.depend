@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1460837137 source:z:\xlsxio\examples\example_xlsxio_read_cpp.cpp
+	<stdlib.h>
+	<stdio.h>
+	<inttypes.h>
+	<string>
+	"xlsxio_read.h"
+
+1460837043 z:\xlsxio\include\xlsxio_read.h
+	<stdlib.h>
+	<stdint.h>
+	<time.h>
+
