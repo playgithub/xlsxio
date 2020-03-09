@@ -27,6 +27,6 @@ script:
 #  - make install CC=$CC PREFIX=$(pwd)/build_result
   - mkdir -p buildall build_result
   - cd buildall
-  - cmake -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/../build_result -DCMAKE_BUILD_TYPE:STRING=Release -DWITH_LIBZIP:BOOL=OFF ..
+  - cmake -Wno-dev -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX:PATH=$(pwd)/../build_result -DCMAKE_BUILD_TYPE:STRING=Release -DWITH_LIBZIP:BOOL=OFF ..
   - cd ..
   - make -Cbuildall install/strip
