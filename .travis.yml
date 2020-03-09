@@ -7,19 +7,19 @@ jobs:
     - name: "Linux Clang"
       os: linux
       compiler: clang
-#    - name: "Mac OS X Clang"
-#      os: osx
-#      compiler: clang
+    - name: "Mac OS X Clang"
+      os: osx
+      compiler: clang
 
 addons:
   apt:
     packages:
       - expat
       - minizip
-#  homebrew:
-#    packages:
-#      - expat
-#      - minizip
+  homebrew:
+    packages:
+      - expat
+      - minizip
 
 script:
   - make install CC=$CC PREFIX=$(pwd)/build_result
