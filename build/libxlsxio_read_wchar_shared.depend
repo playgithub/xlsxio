@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1583790628 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_read.c
+1583791626 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_read.c
 	"xlsxio_private.h"
 	"xlsxio_read_sharedstrings.h"
 	"xlsxio_read.h"
@@ -7,6 +7,7 @@
 	<stdlib.h>
 	<inttypes.h>
 	<string.h>
+	<stdio.h>
 	<expat.h>
 	<minizip/unzip.h>
 	<io.h>
@@ -26,7 +27,7 @@
 	<time.h>
 	<wchar.h>
 
-1583783094 \\server\users\brecht\sources\cpp\xlsxio\include\xlsxio_version.h
+1583791822 \\server\users\brecht\sources\cpp\xlsxio\include\xlsxio_version.h
 
 1522317802 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_read_sharedstrings.c
 	"xlsxio_private.h"

@@ -3,6 +3,7 @@
 #include "xlsxio_read.h"
 #include "xlsxio_version.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
 #include <expat.h>
