@@ -19,7 +19,7 @@ addons:
   homebrew:
     packages:
       - expat
-      - minizip
+      - minizip2
 
 script:
   - make install CC=$CC PREFIX=$(pwd)/build_result
