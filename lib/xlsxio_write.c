@@ -857,7 +857,7 @@ void write_cell_data (xlsxiowriter handle, const char* rowattr, const char* pref
   if (handle->sheetopen) {
     //write cell data
     if (prefix)
-      fprintf(handle->pipe_write, "%s", prefix COLNRPARAM(handle));
+      fprintf(handle->pipe_write, prefix COLNRPARAM(handle));
     if (data)
       fprintf(handle->pipe_write, "%s", data);
     if (suffix)
