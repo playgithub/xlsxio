@@ -3,6 +3,8 @@
 2020-03-09  Brecht Sanders  https://github.com/brechtsanders/
 
   * fixed CMakeLists.txt issue where BUILD_XLSXIO_DLL was also defined for static libraries
+  * added .travis.yml to allow building with Travis CI (on Linux)
+  * changes to xlsxio_write.c to support minizip2
 
 0.2.21
 

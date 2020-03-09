@@ -20,6 +20,15 @@
 #    define IOSIZETYPE ssize_t
 #    define IOFN(fn) fn
 #  endif
+/*
+#  if !defined(Z_DEFLATED) && defined(MZ_COMPRESS_METHOD_DEFLATE) // support minizip2 which defines MZ_COMPRESS_METHOD_DEFLATE instead of Z_DEFLATED
+#    ifndef ZCALLBACK
+#      define ZCALLBACK
+#    endif
+#    define voidpf void*
+#    define uLong  unsigned long
+#  endif
+*/
 #else
 #  if (defined(STATIC) || defined(BUILD_XLSXIO_STATIC) || defined(BUILD_XLSXIO_STATIC_DLL) || (defined(BUILD_XLSXIO) && !defined(BUILD_XLSXIO_DLL) && !defined(BUILD_XLSXIO_SHARED))) && !defined(ZIP_STATIC)
 #    define ZIP_STATIC
@@ -33,8 +42,8 @@
 #endif
 
 #if defined(_MSC_VER)
-#undef DLL_EXPORT_XLSXIO
-#define DLL_EXPORT_XLSXIO
+#  undef DLL_EXPORT_XLSXIO
+#  define DLL_EXPORT_XLSXIO
 #endif
 
 #define PARSE_BUFFER_SIZE 256

@@ -12,46 +12,49 @@
 #include <stdarg.h>
 
 #ifdef USE_MINIZIP
-#include <minizip/zip.h>
-#define ZIPFILETYPE zipFile
+#  include <minizip/zip.h>
+#  if !defined(Z_DEFLATED) && defined(MZ_COMPRESS_METHOD_DEFLATE) /* support minizip2 which defines MZ_COMPRESS_METHOD_DEFLATE instead of Z_DEFLATED */
+#    define Z_DEFLATED MZ_COMPRESS_METHOD_DEFLATE
+#  endif
+#  define ZIPFILETYPE zipFile
 #else
-#if (defined(STATIC) || defined(BUILD_XLSXIO_STATIC) || defined(BUILD_XLSXIO_STATIC_DLL) || (defined(BUILD_XLSXIO) && !defined(BUILD_XLSXIO_DLL) && !defined(BUILD_XLSXIO_SHARED))) && !defined(ZIP_STATIC)
-#define ZIP_STATIC
-#endif
-#include <zip.h>
-#ifndef ZIP_RDONLY
+#  if (defined(STATIC) || defined(BUILD_XLSXIO_STATIC) || defined(BUILD_XLSXIO_STATIC_DLL) || (defined(BUILD_XLSXIO) && !defined(BUILD_XLSXIO_DLL) && !defined(BUILD_XLSXIO_SHARED))) && !defined(ZIP_STATIC)
+#    define ZIP_STATIC
+#  endif
+#  include <zip.h>
+#  ifndef ZIP_RDONLY
 typedef struct zip zip_t;
 typedef struct zip_source zip_source_t;
-#endif
-#define ZIPFILETYPE zip_t
-#ifndef USE_LIBZIP
-#define USE_LIBZIP
-#endif
+#  endif
+#  define ZIPFILETYPE zip_t
+#  ifndef USE_LIBZIP
+#    define USE_LIBZIP
+#  endif
 #endif
 
 #if defined(_WIN32) && !defined(USE_PTHREADS)
-#define USE_WINTHREADS
-#include <windows.h>
+#  define USE_WINTHREADS
+#  include <windows.h>
 #else
-#define USE_PTHREADS
-#include <pthread.h>
+#  define USE_PTHREADS
+#  include <pthread.h>
 #endif
 
 #if defined(_MSC_VER)
-#undef DLL_EXPORT_XLSXIO
-#define DLL_EXPORT_XLSXIO
-#define va_copy(dst,src) ((dst) = (src))
+#  undef DLL_EXPORT_XLSXIO
+#  define DLL_EXPORT_XLSXIO
+#  define va_copy(dst,src) ((dst) = (src))
 #endif
 
 #ifdef _WIN32
-#define pipe(fds) _pipe(fds, 4096, _O_BINARY)
-#define read _read
-#define write _write
-#define write _write
-#define close _close
-#define fdopen _fdopen
+#  define pipe(fds) _pipe(fds, 4096, _O_BINARY)
+#  define read _read
+#  define write _write
+#  define write _write
+#  define close _close
+#  define fdopen _fdopen
 #else
-#define _fdopen(f) f
+#  define _fdopen(f) f
 #endif
 
 //#undef WITHOUT_XLSX_STYLES
