@@ -14,8 +14,8 @@ jobs:
 addons:
   apt:
     packages:
-      - expat
-      - minizip
+      - libexpat1-dev
+      - libminizip-dev
   homebrew:
     packages:
       - expat
