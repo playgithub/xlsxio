@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1583791626 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_read.c
+1584573202 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_read.c
 	"xlsxio_private.h"
 	"xlsxio_read_sharedstrings.h"
 	"xlsxio_read.h"
 	"xlsxio_version.h"
 	<stdlib.h>
+	<stdio.h>
 	<inttypes.h>
 	<string.h>
-	<stdio.h>
 	<expat.h>
 	<minizip/unzip.h>
 	<io.h>

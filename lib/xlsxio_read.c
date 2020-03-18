@@ -50,6 +50,11 @@
 #define PARSE_BUFFER_SIZE 256
 //#define PARSE_BUFFER_SIZE 4
 
+static const XLSXIOCHAR* xlsx_content_type = X("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml");
+static const XLSXIOCHAR* xlsm_content_type = X("application/vnd.ms-excel.sheet.macroEnabled.main+xml");
+static const XLSXIOCHAR* xltx_content_type = X("application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml");
+static const XLSXIOCHAR* xltm_content_type = X("application/vnd.ms-excel.template.macroEnabled.main+xml");
+
 #if !defined(XML_UNICODE_WCHAR_T) && !defined(XML_UNICODE)
 
 //UTF-8 version
@@ -780,7 +785,10 @@ DLL_EXPORT_XLSXIO void xlsxioread_list_sheets (xlsxioreader handle, xlsxioread_l
     .callback = callback,
     .callbackdata = callbackdata
   };
-  iterate_files_by_contenttype(handle->zip, X("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"), xlsxioread_list_sheets_callback, &sheetcallbackdata, &sheetcallbackdata.xmlparser);
+  iterate_files_by_contenttype(handle->zip, xlsx_content_type, xlsxioread_list_sheets_callback, &sheetcallbackdata, &sheetcallbackdata.xmlparser);
+  iterate_files_by_contenttype(handle->zip, xlsm_content_type, xlsxioread_list_sheets_callback, &sheetcallbackdata, &sheetcallbackdata.xmlparser);
+  iterate_files_by_contenttype(handle->zip, xltx_content_type, xlsxioread_list_sheets_callback, &sheetcallbackdata, &sheetcallbackdata.xmlparser);
+  iterate_files_by_contenttype(handle->zip, xltm_content_type, xlsxioread_list_sheets_callback, &sheetcallbackdata, &sheetcallbackdata.xmlparser);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -874,6 +882,10 @@ void main_sheet_get_sheetfile_callback (ZIPFILETYPE* zip, const XML_Char* filena
     } else {
       free(data->sheetrelid);
       data->sheetrelid = NULL;
+      if (data->basepath) {
+        free(data->basepath);
+        data->basepath = NULL;
+      }
     }
   }
 }
@@ -1262,7 +1274,13 @@ DLL_EXPORT_XLSXIO int xlsxioread_process (xlsxioreader handle, const XLSXIOCHAR*
     .sharedstringsfile = NULL,
     .stylesfile = NULL
   };
-  iterate_files_by_contenttype(handle->zip, X("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"), main_sheet_get_sheetfile_callback, &getrelscallbackdata, NULL);
+  iterate_files_by_contenttype(handle->zip, xlsx_content_type, main_sheet_get_sheetfile_callback, &getrelscallbackdata, NULL);
+  if (!getrelscallbackdata.sheetrelid)
+    iterate_files_by_contenttype(handle->zip, xlsm_content_type, main_sheet_get_sheetfile_callback, &getrelscallbackdata, NULL);
+  if (!getrelscallbackdata.sheetrelid)
+    iterate_files_by_contenttype(handle->zip, xltx_content_type, main_sheet_get_sheetfile_callback, &getrelscallbackdata, NULL);
+  if (!getrelscallbackdata.sheetrelid)
+    iterate_files_by_contenttype(handle->zip, xltm_content_type, main_sheet_get_sheetfile_callback, &getrelscallbackdata, NULL);
 
   //process shared strings
   struct sharedstringlist* sharedstrings = NULL;
@@ -1335,7 +1353,13 @@ DLL_EXPORT_XLSXIO xlsxioreadersheetlist xlsxioread_sheetlist_open (xlsxioreader 
 {
   //determine main sheet name
   XML_Char* mainsheetfile = NULL;
-  iterate_files_by_contenttype(handle->zip, X("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"), xlsxioread_find_main_sheet_file_callback, &mainsheetfile, NULL);
+  iterate_files_by_contenttype(handle->zip, xlsx_content_type, xlsxioread_find_main_sheet_file_callback, &mainsheetfile, NULL);
+  if (!mainsheetfile)
+    iterate_files_by_contenttype(handle->zip, xlsm_content_type, xlsxioread_find_main_sheet_file_callback, &mainsheetfile, NULL);
+  if (!mainsheetfile)
+    iterate_files_by_contenttype(handle->zip, xltx_content_type, xlsxioread_find_main_sheet_file_callback, &mainsheetfile, NULL);
+  if (!mainsheetfile)
+    iterate_files_by_contenttype(handle->zip, xltm_content_type, xlsxioread_find_main_sheet_file_callback, &mainsheetfile, NULL);
   if (!mainsheetfile)
     return NULL;
   //process contents of main sheet

@@ -1,3 +1,10 @@
+0.2.24
+
+2020-03-19  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fixed memory leak (missing free(data->basepath) in main_sheet_get_sheetfile_callback when sheet filename not found)
+  * added support for .xlsm, .xltx and .xltm files (thanks to coproc for suggesting this in issue #61)
+
 0.2.23
 
 2020-03-09  Brecht Sanders  https://github.com/brechtsanders/
