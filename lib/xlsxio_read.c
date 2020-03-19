@@ -1527,49 +1527,53 @@ DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_string (xlsxioreadersheet sheet
   XML_Char* result;
   if (!sheethandle)
     return -1;
-  result = xlsxioread_sheet_next_cell(sheethandle);
+  if ((result = xlsxioread_sheet_next_cell(sheethandle)) == NULL)
+    return 0;
   if (pvalue)
     *pvalue = result;
-  return (result ? 1 : 0);
+  return 1;
 }
 
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_int (xlsxioreadersheet sheethandle, int64_t* pvalue)
 {
   XML_Char* result;
   int status;
-  if ((result = xlsxioread_sheet_next_cell(sheethandle)) != NULL) {
-    if (pvalue) {
-      status = XML_Char_sscanf(result, X("%" PRIi64), pvalue);
-      if (status == EOF || status == 0)
-        *pvalue = 0;
-      //alternative: use strtoimax()
-    }
+  if ((result = xlsxioread_sheet_next_cell(sheethandle)) == NULL)
+    return 0;
+  if (pvalue) {
+    status = XML_Char_sscanf(result, X("%" PRIi64), pvalue);
+    if (status == EOF || status == 0)
+      *pvalue = 0;
+    //alternative: use strtoimax()
   }
-  return (result ? 1 : 0);
+  free(result);
+  return 1;
 }
 
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_float (xlsxioreadersheet sheethandle, double* pvalue)
 {
   XML_Char* result;
-  if ((result = xlsxioread_sheet_next_cell(sheethandle)) != NULL) {
-    if (pvalue)
-      *pvalue = XML_Char_tod(result);
-  }
-  return (result ? 1 : 0);
+  if ((result = xlsxioread_sheet_next_cell(sheethandle)) == NULL)
+    return 0;
+  if (pvalue)
+    *pvalue = XML_Char_tod(result);
+  free(result);
+  return 1;
 }
 
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_datetime (xlsxioreadersheet sheethandle, time_t* pvalue)
 {
   XML_Char* result;
-  if ((result = xlsxioread_sheet_next_cell(sheethandle)) != NULL) {
-    if (pvalue) {
-      double value = XML_Char_tod(result);
-      if (value != 0) {
-        value = (value - 25569) * 86400;  //converstion from Excel to Unix timestamp
-      }
-      *pvalue = value;
+  if ((result = xlsxioread_sheet_next_cell(sheethandle)) == NULL)
+    return 0;
+  if (pvalue) {
+    double value = XML_Char_tod(result);
+    if (value != 0) {
+      value = (value - 25569) * 86400;  //converstion from Excel to Unix timestamp
     }
+    *pvalue = value;
   }
-  return (result ? 1 : 0);
+  free(result);
+  return 1;
 }
 
