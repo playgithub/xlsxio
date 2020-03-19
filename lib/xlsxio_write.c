@@ -529,6 +529,15 @@ char* get_A1col (uint64_t col)
 }
 #endif
 
+#define need_space_preserve_attr(value) 1
+/*
+int need_space_preserve_attr (const char* value)
+{
+  /////TO DO: return non-zero only if space at beginning or end, or contains multiple consecutive spaces
+  return 1;
+}
+*/
+
 ////////////////////////////////////////////////////////////////////////
 
 struct column_info_struct {
@@ -971,10 +980,14 @@ DLL_EXPORT_XLSXIO void xlsxiowrite_set_row_height (xlsxiowriter handle, size_t h
 DLL_EXPORT_XLSXIO void xlsxiowrite_add_column (xlsxiowriter handle, const char* value, int width)
 {
   struct column_info_struct** pcolinfo = handle->pcurrentcolumn;
-  if (value)
-    write_cell_data(handle, STYLE_ATTR(STYLE_HEADER), "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_HEADER) COLNRTAG "><is><t>", "</t></is></c>", "%s", value);
-  else
+  if (value) {
+    if (need_space_preserve_attr(value))
+      write_cell_data(handle, STYLE_ATTR(STYLE_HEADER), "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_HEADER) COLNRTAG "><is xml:space=\"preserve\"><t>", "</t></is></c>", "%s", value);
+    else
+      write_cell_data(handle, STYLE_ATTR(STYLE_HEADER), "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_HEADER) COLNRTAG "><is><t>", "</t></is></c>", "%s", value);
+  } else {
     write_cell_data(handle, STYLE_ATTR(STYLE_HEADER), "<c" STYLE_ATTR(STYLE_HEADER) COLNRTAG "/>", NULL, NULL);
+  }
   if (*pcolinfo)
     (*pcolinfo)->width = width;
   if (handle->freezetop == 0)
@@ -983,10 +996,14 @@ DLL_EXPORT_XLSXIO void xlsxiowrite_add_column (xlsxiowriter handle, const char* 
 
 DLL_EXPORT_XLSXIO void xlsxiowrite_add_cell_string (xlsxiowriter handle, const char* value)
 {
-  if (value)
-    write_cell_data(handle, NULL, "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_TEXT) COLNRTAG "><is><t>", "</t></is></c>", "%s", value);
-  else
+  if (value) {
+    if (need_space_preserve_attr(value))
+      write_cell_data(handle, NULL, "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_TEXT) COLNRTAG "><is xml:space=\"preserve\"><t>", "</t></is></c>", "%s", value);
+    else
+      write_cell_data(handle, NULL, "<c t=\"inlineStr\"" STYLE_ATTR(STYLE_TEXT) COLNRTAG "><is><t>", "</t></is></c>", "%s", value);
+  } else {
     write_cell_data(handle, NULL, "<c" STYLE_ATTR(STYLE_TEXT) COLNRTAG "/>", NULL, NULL);
+  }
 }
 
 DLL_EXPORT_XLSXIO void xlsxiowrite_add_cell_int (xlsxiowriter handle, int64_t value)

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1583791790 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_write.c
+1584631289 source:\\server\users\brecht\sources\cpp\xlsxio\lib\xlsxio_write.c
 	"xlsxio_write.h"
 	"xlsxio_version.h"
 	<stdlib.h>
@@ -20,5 +20,5 @@
 	<stdint.h>
 	<time.h>
 
-1583791822 \\server\users\brecht\sources\cpp\xlsxio\include\xlsxio_version.h
+1584629600 \\server\users\brecht\sources\cpp\xlsxio\include\xlsxio_version.h
 

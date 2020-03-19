@@ -3,6 +3,7 @@
 2020-03-19  Brecht Sanders  https://github.com/brechtsanders/
 
   * fixed memory leaks in xlsxioread_sheet_next_cell_int/xlsxioread_sheet_next_cell_float/xlsxioread_sheet_next_cell_datetime (issue #54)
+  * added xml:space="preserve" to text cells to preserve spacing (issue #16)
 
 0.2.24
 
