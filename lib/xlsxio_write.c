@@ -489,6 +489,7 @@ int append_data (char** pdata, size_t* pdatalen, const char* format, ...)
 }
 
 #ifndef NO_COLUMN_NUMBERS
+/*
 //insert formatted data into a null-terminated buffer at the specified position and update the length counter
 int insert_data (char** pdata, size_t* pdatalen, size_t pos, const char* format, ...)
 {
@@ -508,7 +509,7 @@ int insert_data (char** pdata, size_t* pdatalen, size_t pos, const char* format,
   else
     (*pdata)[pos + len] = 0;
   va_start(args, format);
-  vsnprintf(*pdata + pos, len, format, args);
+  len = vsnprintf(*pdata + pos, len, format, args);
   va_end(args);
   *pdatalen += len;
   return len;
@@ -521,7 +522,25 @@ char* get_A1col (uint64_t col)
   if (col > 0) {
     do {
       col--;
-      insert_data(&result, &resultlen, 0, "%c", 'A' + col % 26);
+      insert_data(&result, &resultlen, 0, "%c", 'A' + (col % 26));
+      col = col / 26;
+    } while (col > 0);
+  }
+  return result;
+}
+*/
+
+char* get_A1col (uint64_t col)
+{
+  char* result = NULL;
+  size_t resultlen = 0;
+  //allocate 19 bytes as the maximum value for 64-bit devided by 26 has 18 digits
+  if (col > 0 && (result = (char*)malloc(19)) != NULL) {
+    result[0] = 0;
+    do {
+      col--;
+      memmove(result + 1, result, ++resultlen);
+      result[0] = 'A' + (col % 26);
       col = col / 26;
     } while (col > 0);
   }
@@ -579,7 +598,6 @@ struct xlsxio_write_struct {
 #define ROWNRPARAM(handle) , handle->rownr
 #ifndef NO_COLUMN_NUMBERS
 #define COLNRTAG " r=\"%s%" PRIu64 "\""
-#define COLNRPARAM(handle) , get_A1col(handle->colnr), handle->rownr
 #endif
 #endif
 
@@ -861,6 +879,9 @@ void write_cell_data (xlsxiowriter handle, const char* rowattr, const char* pref
   //determine cell coordinate
 #if !defined(NO_ROW_NUMBERS) && !defined(NO_COLUMN_NUMBERS)
   cellcoord = get_A1col(++handle->colnr);
+#define COLNRPARAM(handle) , cellcoord, handle->rownr
+#else
+#define COLNRPARAM(handle)
 #endif
   //add cell data
   if (handle->sheetopen) {

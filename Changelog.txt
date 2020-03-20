@@ -1,9 +1,12 @@
 0.2.25
 
-2020-03-19  Brecht Sanders  https://github.com/brechtsanders/
+2020-03-20  Brecht Sanders  https://github.com/brechtsanders/
 
   * fixed memory leaks in xlsxioread_sheet_next_cell_int/xlsxioread_sheet_next_cell_float/xlsxioread_sheet_next_cell_datetime (issue #54)
   * added xml:space="preserve" to text cells to preserve spacing (issue #16)
+  * ran valgrind tests on xlsxio_xlsx2csv and xlsxio_csv2xlsx
+  * fixed memory leak in write_cell_data() in xlsxio_write.c (result of get_A1col was not freed)
+  * rewrote get_A1col() in in xlsxio_write.c to avoid issues on platforms where multiple calls to va_start()/va_end() don't work
 
 0.2.24
 
