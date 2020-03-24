@@ -1,4 +1,5 @@
 .DS_Store
+.idea
 .svn/
 *.xlsx
 *.7z
@@ -11,6 +12,7 @@ obj/
 bin/
 doc/
 CMakeFiles/
+cmake-build-debug
 /Makefile
 example_xlsxio_read
 example_xlsxio_read_advanced
