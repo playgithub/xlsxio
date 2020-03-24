@@ -201,6 +201,8 @@ endif
 	$(CP) $(TOOLS_BIN) $(PREFIX)/bin/
 ifdef DOXYGEN
 	$(CPDIR) doc/man $(PREFIX)/
+	$(MKDIR) $(PREFIX)/share/xlsxio
+	$(CPDIR) doc/html $(PREFIX)/share/xlsxio/
 endif
 
 .PHONY: version
