@@ -224,17 +224,23 @@ DLL_EXPORT_XLSXIO const XLSXIOCHAR* xlsxioread_sheetlist_next (xlsxioreadersheet
 /*! \brief read handle for worksheet object */
 typedef struct xlsxio_read_sheet_struct* xlsxioreadersheet;
 
-/*! \brief get the index of the last column of the current worksheet row
+/*! \brief get index of last row read from worksheet (returns 0 if no row was read yet)
  * \param  sheethandle   read handle for worksheet object
  * \sa     xlsxioread_sheet_open()
  */
-DLL_EXPORT_XLSXIO int xlsxioread_sheet_last_column_index(xlsxioreadersheet sheethandle);
+DLL_EXPORT_XLSXIO size_t xlsxioread_sheet_last_row_index (xlsxioreadersheet sheethandle);
 
-/*! \brief get worksheet open flags
+/*! \brief get index of last column read from current row in worksheet (returns 0 if no column was read yet)
  * \param  sheethandle   read handle for worksheet object
  * \sa     xlsxioread_sheet_open()
  */
-DLL_EXPORT_XLSXIO unsigned int xlsxioread_sheet_flags(xlsxioreadersheet sheethandle);
+DLL_EXPORT_XLSXIO size_t xlsxioread_sheet_last_column_index (xlsxioreadersheet sheethandle);
+
+/*! \brief get flags used to open worksheet
+ * \param  sheethandle   read handle for worksheet object
+ * \sa     xlsxioread_sheet_open()
+ */
+DLL_EXPORT_XLSXIO unsigned int xlsxioread_sheet_flags (xlsxioreadersheet sheethandle);
 
 /*! \brief open worksheet
  * \param  handle        read handle for .xlsx object

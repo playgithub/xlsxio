@@ -1,5 +1,10 @@
 0.2.26
 
+2020-03-20  Brecht Sanders  https://github.com/brechtsanders/
+
+  * accepted patch (#63) to add xlsxioread_sheet_last_column_index() and xlsxioread_sheet_flags()
+  * added xlsxioread_sheet_last_row_index()
+
 0.2.25
 
 2020-03-20  Brecht Sanders  https://github.com/brechtsanders/
