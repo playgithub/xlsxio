@@ -1158,14 +1158,13 @@ void data_sheet_expat_callback_find_cell_end (void* callbackdata, const XML_Char
   if (XML_Char_icmp_ins(name, X("c")) == 0) {
     //determine value
     if (data->celldata) {
-      const XML_Char* s = NULL;
       data->celldata[data->celldatalen] = 0;
       if (data->cell_string_type == shared_string) {
         //get shared string
         XML_Char* p = NULL;
         long num = XML_Char_strtol(data->celldata, &p, 10);
         if (!p || (p != data->celldata && *p == 0)) {
-          s = sharedstringlist_get(data->sharedstrings, num);
+          const XML_Char* s = sharedstringlist_get(data->sharedstrings, num);
           free(data->celldata);
           data->celldata = (s ? XML_Char_dup(s) : NULL);
         }
