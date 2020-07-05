@@ -1,5 +1,9 @@
 0.2.27
 
+2020-07-05  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fixed issues XLSXIOREAD_SKIP_EMPTY_CELLS/XLSXIOREAD_SKIP_EMPTY_ROWS/XLSXIOREAD_SKIP_ALL_EMPTY (issue #74)
+
 2020-05-08  Brecht Sanders  https://github.com/brechtsanders/
 
   * changed Makefile to also generate .def files to be included in Windows packages
