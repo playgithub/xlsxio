@@ -907,11 +907,12 @@ struct data_sheet_callback_data {
   size_t rownr;
   size_t colnr;
   size_t cols;
+  size_t colsnotnull;
   XML_Char* celldata;
   size_t celldatalen;
   cell_string_type_enum cell_string_type;
   unsigned int flags;
-  XML_Char* skiptag;                        //tag to skip
+  XML_Char* skiptag;                    //tag to skip
   size_t skiptagcount;                  //nesting level for current tag to skip
   XML_StartElementHandler skip_start;   //start handler to set after skipping
   XML_EndElementHandler skip_end;       //end handler to set after skipping
@@ -928,6 +929,7 @@ void data_sheet_callback_data_initialize (struct data_sheet_callback_data* data,
   data->rownr = 0;
   data->colnr = 0;
   data->cols = 0;
+  data->colsnotnull = 0;
   data->celldata = NULL;
   data->celldatalen = 0;
   data->cell_string_type = none;
@@ -1022,17 +1024,17 @@ void data_sheet_expat_callback_find_row_start (void* callbackdata, const XML_Cha
   struct data_sheet_callback_data* data = (struct data_sheet_callback_data*)callbackdata;
   if (XML_Char_icmp_ins(name, X("row")) == 0) {
     const XML_Char* hidden = get_expat_attr_by_name(atts, X("hidden"));
-    if (!hidden || XML_Char_tol(hidden) == 0) {//nesting level for current tag to skip
-//start handler to set after skipping
-//end handler to set after skipping
-//data handler to set after skipping
-
+    if (!hidden || XML_Char_tol(hidden) == 0) {
+      int skippedemptyrow = (data->rownr != 0 && data->colsnotnull == 0 && (data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS));
       data->rownr++;
       data->colnr = 0;
+      data->colsnotnull = 0;
       XML_SetElementHandler(data->xmlparser, data_sheet_expat_callback_find_cell_start, data_sheet_expat_callback_find_row_end);
       //for non-calback method suspend here on new row
       if (data->flags & XLSXIOREAD_NO_CALLBACK) {
-        XML_StopParser(data->xmlparser, XML_TRUE);
+        if (!skippedemptyrow) {
+          XML_StopParser(data->xmlparser, XML_TRUE);
+        }
       }
     } else {
       //skip hidden tow
@@ -1063,7 +1065,7 @@ void data_sheet_expat_callback_find_row_end (void* callbackdata, const XML_Char*
     XML_SetElementHandler(data->xmlparser, data_sheet_expat_callback_find_row_start, data_sheet_expat_callback_find_sheetdata_end);
     //process end of row
     if (!(data->flags & XLSXIOREAD_NO_CALLBACK)) {
-      if (data->sheet_row_callback) {
+      if (data->sheet_row_callback && !(data->colsnotnull == 0 && (data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS))) {
         if ((*data->sheet_row_callback)(data->rownr, data->colnr, data->callbackdata)) {
           XML_StopParser(data->xmlparser, XML_FALSE);
           return;
@@ -1071,9 +1073,8 @@ void data_sheet_expat_callback_find_row_end (void* callbackdata, const XML_Char*
       }
     } else {
       //for non-calback method suspend here on end of row
-      if (data->flags & XLSXIOREAD_NO_CALLBACK) {
+      if (!(data->colsnotnull == 0 && (data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS)))
         XML_StopParser(data->xmlparser, XML_TRUE);
-      }
     }
   } else {
     data_sheet_expat_callback_find_sheetdata_end(callbackdata, name);
@@ -1181,20 +1182,24 @@ void data_sheet_expat_callback_find_cell_end (void* callbackdata, const XML_Char
     XML_SetElementHandler(data->xmlparser, data_sheet_expat_callback_find_cell_start, data_sheet_expat_callback_find_row_end);
     XML_SetCharacterDataHandler(data->xmlparser, NULL);
     //process data if needed
-    if (!(data->cols && (data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && data->colnr > data->cols)) {
-      //process data
-      if (!(data->flags & XLSXIOREAD_NO_CALLBACK)) {
-        if (data->sheet_cell_callback) {
-          if ((*data->sheet_cell_callback)(data->rownr, data->colnr, data->celldata, data->callbackdata)) {
-            XML_StopParser(data->xmlparser, XML_FALSE);
-            return;
+    if (data->celldata || !(data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
+      if (!(data->cols && (data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && data->colnr > data->cols)) {
+        //process data
+        if (!(data->flags & XLSXIOREAD_NO_CALLBACK)) {
+          if (data->sheet_cell_callback) {
+            if ((*data->sheet_cell_callback)(data->rownr, data->colnr, data->celldata, data->callbackdata)) {
+              XML_StopParser(data->xmlparser, XML_FALSE);
+              return;
+            }
+            data->colsnotnull++;
           }
+        } else {
+          //for non-calback method suspend here with cell data (don't return NULL as that is used to indicate end of row)
+          if (!data->celldata)
+            data->celldata = XML_Char_dup(X(""));
+          XML_StopParser(data->xmlparser, XML_TRUE);
+          data->colsnotnull++;
         }
-      } else {
-        //for non-calback method suspend here with cell data
-        if (!data->celldata)
-          data->celldata = XML_Char_dup(X(""));
-        XML_StopParser(data->xmlparser, XML_TRUE);
       }
     }
   } else {
@@ -1436,7 +1441,7 @@ DLL_EXPORT_XLSXIO xlsxioreadersheet xlsxioread_sheet_open (xlsxioreader handle, 
   result->paddingrow = 0;
   result->lastcolnr = 0;
   result->paddingcol = 0;
-  xlsxioread_process(handle, sheetname, flags | XLSXIOREAD_NO_CALLBACK, NULL, NULL, result);
+  xlsxioread_process(handle, sheetname, flags | XLSXIOREAD_NO_CALLBACK, NULL, NULL, result);  /* Note: currently broken when not using XLSXIOREAD_NO_CALLBACK flag */
   return result;
 }
 
@@ -1485,7 +1490,7 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
   if (!sheethandle)
     return NULL;
   //append empty column if needed
-  if (sheethandle->paddingcol) {
+  if (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && sheethandle->paddingcol) {
     if (sheethandle->paddingcol > sheethandle->processcallbackdata.cols) {
       //last empty column added, finish row
       sheethandle->paddingcol = 0;
@@ -1526,8 +1531,8 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
   //end of row
   if (!result) {
     sheethandle->lastrownr = sheethandle->processcallbackdata.rownr;
-    //insert empty column at end if row if needed
-    if (!result && !(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && sheethandle->processcallbackdata.colnr < sheethandle->processcallbackdata.cols) {
+    //insert empty column at end of row if needed
+    if (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && sheethandle->processcallbackdata.colnr < sheethandle->processcallbackdata.cols) {
       sheethandle->paddingcol = sheethandle->lastcolnr + 1;
       return xlsxioread_sheet_next_cell(sheethandle);
     }
