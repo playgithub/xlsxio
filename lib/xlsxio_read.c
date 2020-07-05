@@ -1182,11 +1182,22 @@ void data_sheet_expat_callback_find_cell_end (void* callbackdata, const XML_Char
     XML_SetElementHandler(data->xmlparser, data_sheet_expat_callback_find_cell_start, data_sheet_expat_callback_find_row_end);
     XML_SetCharacterDataHandler(data->xmlparser, NULL);
     //process data if needed
-    if (data->celldata || !(data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
+    if (data->celldata || !((data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS) || ((data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS) && data->colsnotnull == 0))) {
       if (!(data->cols && (data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && data->colnr > data->cols)) {
         //process data
         if (!(data->flags & XLSXIOREAD_NO_CALLBACK)) {
           if (data->sheet_cell_callback) {
+            //insert empty columns if needed in case of empty row detection
+            if ((data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS) && !(data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && data->colsnotnull == 0 && data->colnr > 1) {
+              size_t col;
+              for (col = 1; col < data->colnr; col++) {
+                if ((*data->sheet_cell_callback)(data->rownr, col, NULL, data->callbackdata)) {
+                  XML_StopParser(data->xmlparser, XML_FALSE);
+                  return;
+                }
+              }
+            }
+            //process current column data
             if ((*data->sheet_cell_callback)(data->rownr, data->colnr, data->celldata, data->callbackdata)) {
               XML_StopParser(data->xmlparser, XML_FALSE);
               return;
