@@ -1088,11 +1088,6 @@ void data_sheet_expat_callback_find_cell_start (void* callbackdata, const XML_Ch
   if (XML_Char_icmp_ins(name, X("c")) == 0) {
     const XML_Char* t = get_expat_attr_by_name(atts, X("r"));
     size_t cellcolnr = get_col_nr(t);
-    //skip everything when out of bounds
-    if (cellcolnr && data->cols && (data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && cellcolnr > data->cols) {
-      data->colnr = cellcolnr - 1;
-      return;
-    }
     //insert empty rows if needed
     if (data->colnr == 0) {
       size_t cellrownr = get_row_nr(t);
@@ -1130,9 +1125,11 @@ void data_sheet_expat_callback_find_cell_start (void* callbackdata, const XML_Ch
       if ((data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS) || data->colnr == 0 || (data->flags & XLSXIOREAD_NO_CALLBACK)) {
         data->colnr = cellcolnr;
       } else {
-        while (data->colnr < cellcolnr) {
+        size_t cellmax = cellcolnr;
+        if ((data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && cellmax > data->cols)
+          cellmax = data->cols;
+        while (data->colnr < cellmax) {
           if (data->colnr > 0 && data->sheet_cell_callback) {
-printf(".");/////
             if ((*data->sheet_cell_callback)(data->rownr, data->colnr + 1, NULL, data->callbackdata)) {
               XML_StopParser(data->xmlparser, XML_FALSE);
               return;
@@ -1518,9 +1515,13 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
         }
       }
       return NULL;
+    } else if ((sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && sheethandle->processcallbackdata.cols && sheethandle->lastcolnr >= sheethandle->processcallbackdata.cols) {
+      //end of line when out of bounds
+      return NULL;
     } else {
       //add another empty column
       sheethandle->paddingcol++;
+      sheethandle->lastcolnr++;
       return XML_Char_dup(X(""));
     }
   }
@@ -1537,8 +1538,13 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
   //insert empty column before if needed
   if (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
     if (sheethandle->lastcolnr + 1 < sheethandle->processcallbackdata.colnr) {
-      sheethandle->lastcolnr++;
-      return XML_Char_dup(X(""));
+      if (0) {//if ((sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && sheethandle->processcallbackdata.cols && sheethandle->lastcolnr >= sheethandle->processcallbackdata.cols) {
+        //end of line when out of bounds
+        return NULL;
+      } else {
+        sheethandle->lastcolnr++;
+        return XML_Char_dup(X(""));
+      }
     }
   }
   result = sheethandle->processcallbackdata.celldata;
