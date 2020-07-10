@@ -22,3 +22,26 @@
 
 1585051485 \\server\users\brecht\sources\cpp\xlsxio\include\xlsxio_version.h
 
+1584727926 source:z:\xlsxio\lib\xlsxio_write.c
+	"xlsxio_write.h"
+	"xlsxio_version.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<time.h>
+	<inttypes.h>
+	<unistd.h>
+	<fcntl.h>
+	<stdarg.h>
+	<minizip/zip.h>
+	<zip.h>
+	<windows.h>
+	<pthread.h>
+
+1583785145 z:\xlsxio\include\xlsxio_write.h
+	<stdlib.h>
+	<stdint.h>
+	<time.h>
+
+1594390364 z:\xlsxio\include\xlsxio_version.h
+

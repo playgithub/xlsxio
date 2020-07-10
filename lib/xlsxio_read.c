@@ -1049,7 +1049,7 @@ void data_sheet_expat_callback_find_row_end (void* callbackdata, const XML_Char*
   struct data_sheet_callback_data* data = (struct data_sheet_callback_data*)callbackdata;
   if (XML_Char_icmp_ins(name, X("row")) == 0) {
     //determine number of columns based on first row
-    if ((data->flags && XLSXIOREAD_SKIP_EXTRA_CELLS) && data->rownr == 1 && data->cols == 0)
+    if ((data->flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && data->rownr == 1 && data->cols == 0)
       data->cols = data->colnr;
     //add empty columns if needed
     if (!(data->flags & XLSXIOREAD_NO_CALLBACK) && data->sheet_cell_callback && !(data->flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
@@ -1500,10 +1500,9 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
   XML_Char* result;
   if (!sheethandle)
     return NULL;
-  //append empty column if needed
   //if (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && sheethandle->paddingcol) {
   if ((!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS) && sheethandle->paddingcol) || (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_ROWS) && sheethandle->paddingrow)) {
-    if (sheethandle->paddingcol > sheethandle->processcallbackdata.cols || (sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
+    if ((/*sheethandle->processcallbackdata.cols > 0 &&*/ sheethandle->paddingcol > sheethandle->processcallbackdata.cols) || (sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
       //last empty column added, finish row
       sheethandle->paddingcol = 0;
       //when padding rows prepare for the next one
@@ -1524,6 +1523,9 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
       sheethandle->lastcolnr++;
       return XML_Char_dup(X(""));
     }
+  } else if ((sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && sheethandle->processcallbackdata.cols > 0 && sheethandle->lastcolnr >= sheethandle->processcallbackdata.cols) {
+    //end of line when out of bounds
+    return NULL;
   }
   //get value
   if (!sheethandle->processcallbackdata.celldata)
@@ -1538,7 +1540,8 @@ DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet shee
   //insert empty column before if needed
   if (!(sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EMPTY_CELLS)) {
     if (sheethandle->lastcolnr + 1 < sheethandle->processcallbackdata.colnr) {
-      if (0) {//if ((sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && sheethandle->processcallbackdata.cols > 0 && sheethandle->lastcolnr >= sheethandle->processcallbackdata.cols) {
+      if (0) {
+      //if ((sheethandle->processcallbackdata.flags & XLSXIOREAD_SKIP_EXTRA_CELLS) && sheethandle->processcallbackdata.cols > 0 && sheethandle->lastcolnr >= sheethandle->processcallbackdata.cols) {
         //end of line when out of bounds
         return NULL;
       } else {
@@ -1617,3 +1620,7 @@ DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_datetime (xlsxioreadersheet she
   return 1;
 }
 
+DLL_EXPORT_XLSXIO void xlsxioread_free (XLSXIOCHAR* data)
+{
+  free(data);
+}
