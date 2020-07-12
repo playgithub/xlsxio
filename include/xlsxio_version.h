@@ -74,4 +74,7 @@ THE SOFTWARE.
 /*! \brief string with name and version of XLSX I/O writing library \hideinitializer */
 #define XLSXIOWRITE_FULLNAME XLSXIOWRITE_NAME " " XLSXIO_VERSION_STRING
 
+/*! \brief interger version of the library */
+#define XLSXIO_VERSION_ID (XLSXIO_VERSION_MAJOR * 10000 + XLSXIO_VERSION_MINOR * 100 + XLSXIO_VERSION_MICRO)
+
 #endif
