@@ -1,5 +1,13 @@
 0.2.30
 
+2020-12-29  Viest  https://github.com/viest
+
+  * added XLSXIOREAD_SKIP_HIDDEN_ROWS to xlsxio_read.h, skipping hidden rows is no longer the default setting
+  
+2020-12-29  akuhtr  https://github.com/akuhtr
+
+  * fixed example in README.md to use xlsxioread_free() instead of free()
+  
 2020-07-12  Remi Collet  https://github.com/remicollet
 
   * added XLSXIO_VERSION_ID to xlsxio_version.h
