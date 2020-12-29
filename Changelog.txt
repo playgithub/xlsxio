@@ -1,4 +1,31 @@
+0.2.30
+
+2020-07-12  Remi Collet  https://github.com/remicollet
+
+  * added XLSXIO_VERSION_ID to xlsxio_version.h
+  
+0.2.29
+
+2020-07-10  Brecht Sanders  https://github.com/brechtsanders/
+
+  * only treat sheet as a table (with header rows) when XLSXIOREAD_SKIP_EXTRA_CELLS flag is used (issue #75)
+  * added xlsxioread_free() to fix crashes when calling library build with different compiler (issue #73)
+
+0.2.28
+
+2020-07-06  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fixed issues with XLSXIOREAD_SKIP_EMPTY_CELLS/XLSXIOREAD_SKIP_EMPTY_ROWS/XLSXIOREAD_SKIP_ALL_EMPTY/XLSXIOREAD_SKIP_EXTRA_CELLS (issue #75)
+
 0.2.27
+
+2020-07-05  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fixed issues with XLSXIOREAD_SKIP_EMPTY_CELLS/XLSXIOREAD_SKIP_EMPTY_ROWS/XLSXIOREAD_SKIP_ALL_EMPTY (issue #74)
+
+2020-05-08  Brecht Sanders  https://github.com/brechtsanders/
+
+  * changed Makefile to also generate .def files to be included in Windows packages
 
 2020-03-20  Brecht Sanders  https://github.com/brechtsanders/
 

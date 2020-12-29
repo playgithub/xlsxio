@@ -76,8 +76,8 @@ ifneq ($(OS),Windows_NT)
 SHARED_CFLAGS += -fPIC
 endif
 ifeq ($(OS),Windows_NT)
-XLSXIOREAD_SHARED_LDFLAGS += -Wl,--out-implib,$@$(LIBEXT)
-XLSXIOWRITE_SHARED_LDFLAGS += -Wl,--out-implib,$@$(LIBEXT)
+XLSXIOREAD_SHARED_LDFLAGS += -Wl,--out-implib,$@$(LIBEXT) -Wl,--compat-implib -Wl,--output-def,$(@:%.dll=%.def)
+XLSXIOWRITE_SHARED_LDFLAGS += -Wl,--out-implib,$@$(LIBEXT) -Wl,--compat-implib -Wl,--output-def,$(@:%.dll=%.def)
 else ifeq ($(OS),Darwin)
 else
 XLSXIOWRITE_LDFLAGS += -pthread
@@ -194,6 +194,7 @@ install: all doc
 	$(CP) include/*.h $(PREFIX)/include/
 	$(CP) *$(LIBEXT) $(PREFIX)/lib/
 ifeq ($(OS),Windows_NT)
+	$(CP) *.def $(PREFIX)/lib/
 	$(CP) *$(SOEXT) $(PREFIX)/bin/
 else
 	$(CP) *$(SOEXT) $(PREFIX)/lib/
@@ -228,5 +229,8 @@ endif
 .PHONY: clean
 clean:
 	$(RM) lib/*.o examples/*.o src/*.o *$(LIBEXT) *$(SOEXT) $(TOOLS_BIN) $(EXAMPLES_BIN) version xlsxio-*.tar.xz doc/doxygen_sqlite3.db
+ifeq ($(OS),Windows_NT)
+	$(RM) *.def
+endif
 	$(RMDIR) doc/html doc/man
 

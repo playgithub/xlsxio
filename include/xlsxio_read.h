@@ -269,17 +269,19 @@ DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_row (xlsxioreadersheet sheethandle);
 
 /*! \brief get next cell from worksheet
  * \param  sheethandle   read handle for worksheet object
- * \return value (caller must free the result) or NULL if no more cells are available in the current row
+ * \return value (caller must free the result using xlsxioread_free()) or NULL if no more cells are available in the current row
  * \sa     xlsxioread_sheet_open()
+ * \sa     xlsxioread_free()
  */
 DLL_EXPORT_XLSXIO XLSXIOCHAR* xlsxioread_sheet_next_cell (xlsxioreadersheet sheethandle);
 
 /*! \brief get next cell from worksheet as a string
  * \param  sheethandle   read handle for worksheet object
- * \param  pvalue        pointer where string will be stored if data is available (caller must free the result)
+ * \param  pvalue        pointer where string will be stored if data is available (caller must free the result using xlsxioread_free())
  * \return non-zero if a new cell was available in the current row
  * \sa     xlsxioread_sheet_open()
  * \sa     xlsxioread_sheet_next_cell()
+ * \sa     xlsxioread_free()
  */
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_string (xlsxioreadersheet sheethandle, XLSXIOCHAR** pvalue);
 
@@ -309,6 +311,13 @@ DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_float (xlsxioreadersheet sheeth
  * \sa     xlsxioread_sheet_next_cell()
  */
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_datetime (xlsxioreadersheet sheethandle, time_t* pvalue);
+
+/*! \brief free memory allocated by the library
+ * \param  data          memory to be freed
+ * \sa     xlsxioread_sheet_next_cell()
+ * \sa     xlsxioread_sheet_next_cell_string()
+ */
+DLL_EXPORT_XLSXIO void xlsxioread_free (XLSXIOCHAR* data);
 
 #ifdef __cplusplus
 }
