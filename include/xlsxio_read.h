@@ -158,6 +158,8 @@ DLL_EXPORT_XLSXIO void xlsxioread_list_sheets (xlsxioreader handle, xlsxioread_l
 #define XLSXIOREAD_SKIP_ALL_EMPTY       (XLSXIOREAD_SKIP_EMPTY_ROWS | XLSXIOREAD_SKIP_EMPTY_CELLS)
 /*! \brief skip extra cells to the right of the rightmost header cell \hideinitializer */
 #define XLSXIOREAD_SKIP_EXTRA_CELLS     0x04
+/*! \brief skip hidden rows \hideinitializer */
+#define XLSXIOREAD_SKIP_HIDDEN_ROWS     0x08
 /*! @} */
 
 /*! \brief type of pointer to callback function for processing a worksheet cell value
@@ -309,8 +311,6 @@ DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_float (xlsxioreadersheet sheeth
  * \sa     xlsxioread_sheet_next_cell()
  */
 DLL_EXPORT_XLSXIO int xlsxioread_sheet_next_cell_datetime (xlsxioreadersheet sheethandle, time_t* pvalue);
-
-
 
 /*! \brief free memory allocated by the library
  * \param  data          memory to be freed

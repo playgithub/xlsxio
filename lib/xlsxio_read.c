@@ -1025,12 +1025,15 @@ void data_sheet_expat_callback_find_row_start (void* callbackdata, const XML_Cha
   struct data_sheet_callback_data* data = (struct data_sheet_callback_data*)callbackdata;
   if (XML_Char_icmp_ins(name, X("row")) == 0) {
     const XML_Char* hidden = get_expat_attr_by_name(atts, X("hidden"));
-    if (!hidden || XML_Char_tol(hidden) == 0) {
+    if (!hidden || XML_Char_tol(hidden) == 0 || !(data->flags & XLSXIOREAD_SKIP_HIDDEN_ROWS)) {
       int skippedemptyrow = (data->rownr != 0 && data->colsnotnull == 0 && (data->flags & XLSXIOREAD_SKIP_EMPTY_ROWS));
+
       data->rownr++;
       data->colnr = 0;
       data->colsnotnull = 0;
+
       XML_SetElementHandler(data->xmlparser, data_sheet_expat_callback_find_cell_start, data_sheet_expat_callback_find_row_end);
+
       //for non-calback method suspend here on new row
       if (data->flags & XLSXIOREAD_NO_CALLBACK) {
         if (!skippedemptyrow) {
@@ -1038,7 +1041,7 @@ void data_sheet_expat_callback_find_row_start (void* callbackdata, const XML_Cha
         }
       }
     } else {
-      //skip hidden tow
+      //skip hidden row
       XML_SetElementHandler(data->xmlparser, NULL, data_sheet_expat_callback_find_row_end);
     }
   }
