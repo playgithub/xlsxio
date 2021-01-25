@@ -90,7 +90,6 @@ Building with CMake (preferred method)
   + `-DBUILD_SHARED:BOOL=OFF` - Don't build shared libraries
   + `-DBUILD_TOOLS:BOOL=OFF` - Don't build tools (only libraries)
   + `-DBUILD_EXAMPLES:BOOL=OFF` - Don't build examples
-  + `-DBUILD_EXAMPLES:BOOL=OFF` - Don't build examples
   + `-DWITH_LIBZIP:BOOL=ON` - Use libzip instead of Minizip
   + `-DLIBZIP_DIR:PATH=<path>` - Location of libzip library
   + `-DMINIZIP_DIR:PATH=<path>` - Location of Minizip library
