@@ -1,0 +1,13 @@
+prefix=/mingw64
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libxlsxio
+Version: 0.2.29
+Description: C library for reading and writing .xlsx files.
+URL: https://github.com/brechtsanders/xlsxio
+Requires: libzip expat
+Cflags: -I${includedir}
+Libs: -L${libdir} -llibxlsxio_read -L${libdir} -llibxlsxio_write
+Libs.private: -lexpat -lzip
