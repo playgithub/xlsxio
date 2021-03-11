@@ -1,5 +1,9 @@
 0.2.30
 
+2021-03-11  Brecht Sanders  https://github.com/brechtsanders/
+
+  * fix CMakeLists.txt to generate and install pkg-config .pc files
+
 2020-12-29  Viest  https://github.com/viest
 
   * added XLSXIOREAD_SKIP_HIDDEN_ROWS to xlsxio_read.h, skipping hidden rows is no longer the default setting
