@@ -1,5 +1,9 @@
 0.2.30
 
+2021-03-12  Brecht Sanders  https://github.com/brechtsanders/
+
+  * remove <AppVersion> tag from xlsxio_write.c and put version information in <Application> (issue #91)
+
 2021-03-11  Brecht Sanders  https://github.com/brechtsanders/
 
   * fix CMakeLists.txt to generate and install pkg-config .pc files
