@@ -152,7 +152,7 @@ const char* docprops_core_xml =
 const char* docprops_app_xml =
   XML_HEADER
   "<Properties xmlns=\"http://schemas.openxmlformats.org/officeDocument/2006/extended-properties\" xmlns:vt=\"http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes\">" OPTIONAL_LINE_BREAK
-  "<Application>" XLSXIOWRITE_NAME " " XLSXIO_VERSION_STRING "</Application>" OPTIONAL_LINE_BREAK
+  "<Application>" XLSXIOWRITE_NAME " " XLSXIO_VERSION_STRING "</Application>" OPTIONAL_LINE_BREAK 
   "</Properties>" OPTIONAL_LINE_BREAK;
 
 const char* rels_xml =
