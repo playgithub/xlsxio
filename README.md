@@ -14,7 +14,7 @@ The library was written with the following goals in mind:
 - simple interface
 - small footprint
 - portable across different platforms (Windows, *nix)
-- minimal dependancies: only depends on expat (only for reading) and minizip or libzip (which in turn depend on zlib)
+- minimal dependencies: only depends on expat (only for reading) and minizip or libzip (which in turn depend on zlib)
 - separate library for reading and writing .xlsx files
 - does not require Microsoft(R) Excel(TM) to be installed
 
@@ -51,15 +51,15 @@ Some command line utilities are included:
 - `xlsxio_xlsx2csv` - converts all sheets in all specified .xlsx files to individual CSV (Comma Separated Values) files.
 - `xlsxio_csv2xlsx` - converts all specified CSV (Comma Separated Values) files to .xlsx files.
 
-Dependancies
+Dependencies
 ------------
-This project has the following depencancies:
+This project has the following dependencies:
 - [expat](http://www.libexpat.org/) (only for libxlsxio_read)
 - [minizip](http://www.winimage.com/zLibDll/minizip.html) or [libzip](http://www.nih.at/libzip/) (libxlsxio_read and libxlsxio_write)
 
 Note that minizip is preferred, as there have been reports that .xlsx files generated with XLSX I/O built against libzip can't be opened with LibreOffice.
 
-There is no dependancy on Microsoft(R) Excel(TM).
+There is no dependency on Microsoft(R) Excel(TM).
 
 XLSX I/O was written with cross-platform portability in mind and works on multiple operating systems, including Windows, macOS and Linux.
 
@@ -67,7 +67,7 @@ Building from source
 --------------------
 Requirements:
 - a C compiler like gcc or clang, on Windows MinGW and MinGW-w64 are supported
-- the dependancy libraries (see Dependancies)
+- the dependency libraries (see Dependencies)
 - a shell environment, on Windows MSYS is supported
 - the make command
 - CMake version 2.6 or higher (optional, but preferred)
