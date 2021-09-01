@@ -1,5 +1,7 @@
 XLSX I/O
 ========
+[![Mentioned in Awesome C](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/oz123/awesome-c)
+
 Cross-platform C library for reading values from and writing values to .xlsx files.
 
 Description
