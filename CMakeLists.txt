@@ -37,7 +37,7 @@ IF(NOT BUILD_STATIC AND NOT BUILD_SHARED)
 ENDIF()
 
 # dependancies
-SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
+# SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 #   dependancy: zlib (dependancy of libzip/Minizip, should be detected there)
 IF(ZLIB_DIR)
   SET(ZLIB_ROOT ${ZLIB_DIR})
