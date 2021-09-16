@@ -1,6 +1,8 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
-PROJECT(xlsxio DESCRIPTION "C libraries for reading and writing .xlsx files")
+PROJECT(xlsxio DESCRIPTION
+        DESCRIPTION "C libraries for reading and writing .xlsx files"
+        LANGUAGES C)
 
 # get version number
 FILE(READ "include/xlsxio_version.h" VERFILE)
